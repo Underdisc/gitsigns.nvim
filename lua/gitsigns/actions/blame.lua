@@ -208,7 +208,7 @@ local function render(blame, win, main_win, buf_sha)
     if sha == last_sha then
       cnt = cnt + 1
       local graph = sha == next_sha and chars.mid or chars.last
-      if cnt == 1 and show_summary then
+      if config.blame_summary and cnt == 1 and show_summary then
         summary_line = true
         line_chunks = {
           { graph, hash_hl },
@@ -391,7 +391,12 @@ local function on_cursor_moved(bufnr, blm_win, blame, commit_lines, commit_summa
     end
   end
 
-  if commit_lines[lnum] and commit_lines[lnum + 1] and commit_summaries[lnum] ~= false then
+  if
+    config.blame_summary
+    and commit_lines[lnum]
+    and commit_lines[lnum + 1]
+    and commit_summaries[lnum] ~= false
+  then
     local blame_info = assert(blame[lnum])
     local hash_hl = get_hash_color(blame_info.commit.abbrev_sha)
     api.nvim_buf_set_extmark(blm_bufnr, ns_hl, lnum - 1, 0, {

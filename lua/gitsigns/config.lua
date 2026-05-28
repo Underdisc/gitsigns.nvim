@@ -98,6 +98,7 @@ local validate = require('gitsigns.util').validate
 --- @field current_line_blame_opts Gitsigns.CurrentLineBlameOpts
 --- @field blame_formatter? string|Gitsigns.BlameFormatterFun
 --- @field blame_heatmap boolean
+--- @field blame_summary boolean
 --- @field preview_config vim.api.keyset.win_config
 --- @field auto_attach boolean
 --- @field attach_to_untracked boolean
@@ -807,6 +808,14 @@ M.schema = {
     default = true,
     description = [[
       Turns the blame heatmap on (true) or off (false).
+    ]]
+  },
+
+  blame_summary = {
+    type = { 'boolean' },
+    default = true,
+    description = [[
+      Turn commit summaries in the blame window on (true) or off (false).
     ]]
   },
 
