@@ -242,7 +242,10 @@ local function render(blame, win, main_win, buf_sha)
     last_sha = sha
   end
 
-  api.nvim_win_set_width(win, win_width + 1)
+  if config.blame_heatmap then
+    win_width = win_width + 1
+  end
+  api.nvim_win_set_width(win, win_width)
 
   local bufnr = api.nvim_win_get_buf(win)
 
@@ -260,8 +263,6 @@ local function render(blame, win, main_win, buf_sha)
   end
 
   for i, blame_info in ipairs(entries) do
-    set_right_extmark(bufnr, i, win_width, min_time, max_time, blame_info.commit.author_time)
-
     if buf_sha == blame_info.commit.sha then
       hl_line(bufnr, ns, i, '@markup.italic')
     end
@@ -631,8 +632,10 @@ function M.blame(opts)
     buffer = blm_bufnr,
     group = group,
     callback = function()
-      local min_time, max_time = assert(cache[bufnr]):get_blame_times()
-      update_right_extmarks(blm_bufnr, blm_win, blame.entries, min_time, max_time)
+      if config.blame_heatmap then
+        local min_time, max_time = assert(cache[bufnr]):get_blame_times()
+        update_right_extmarks(blm_bufnr, blm_win, blame.entries, min_time, max_time)
+      end
     end,
   })
 
